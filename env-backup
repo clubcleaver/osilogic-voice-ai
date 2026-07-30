@@ -1,0 +1,42 @@
+# Remote deployments run with production signaling and HTTPS defaults
+ENVIRONMENT=production
+
+# Canonical public host/base URL for this install. SERVER_IP stays the raw IP
+# (coturn external-ip and validation need it); PUBLIC_HOST is the sslip.io
+# hostname when using a trusted cert, otherwise the IP. BACKEND_API_ENDPOINT,
+# MINIO_PUBLIC_ENDPOINT and TURN_HOST are derived from these by the API
+# (see api/constants.py) — set them here only to override for a split deployment.
+SERVER_IP=0.0.0.0
+PUBLIC_HOST=https://137-23-12-225.sslip.io
+PUBLIC_BASE_URL=https://137-23-12-225.sslip.io
+UI_APP_URL=https://137-23-12-225.sslip.io
+
+
+# TURN Server Configuration (time-limited credentials via TURN REST API)
+TURN_SECRET=28670dd431ca0d427ebda8cce575d1752a883ff98e241da332a1c091c842043f
+# Relay-only ICE candidates for explicit TURN diagnostics
+FORCE_TURN_RELAY=false
+
+# JWT secret for OSS authentication
+OSS_JWT_SECRET=32359e1161dba7b115449cab0142f1312f9b31e3dd9b9d5c8e28caabbcd13c69
+
+# PostgreSQL password. Used by the postgres container on first init and by the
+# API's DATABASE_URL. Do not change after the first start — the password is
+# baked into the postgres data volume when it is first created.
+POSTGRES_PASSWORD=40c250b83ff63ebf7e3e32224e15b3a929728462812b7186670af0c095eeeaf9
+
+# Redis password. Used by the redis container's --requirepass and the API's
+# REDIS_URL. Unlike postgres, this is not baked into a volume and can be
+# rotated by updating .env and recreating the redis container.
+REDIS_PASSWORD=83c95a2137825dbb48c56410958f3d20dd0fb96ffab1cb5a7f660b21084827f3
+
+# MinIO root credentials. Used by the MinIO container and the API's
+# MINIO_ACCESS_KEY / MINIO_SECRET_KEY.
+MINIO_ROOT_USER=dograh4f2e541270ae
+MINIO_ROOT_PASSWORD=519ccd78be397c3e8865e17703d5749be2ea72622c548d7027fd3e7b8621b8c8
+
+# Telemetry (set to false to disable)
+ENABLE_TELEMETRY=false
+
+# Number of uvicorn worker processes; nginx load-balances across them
+FASTAPI_WORKERS=4
